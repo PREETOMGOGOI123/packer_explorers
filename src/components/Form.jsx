@@ -98,7 +98,7 @@ Thank you 🙏
         const encodedMessage = encodeURIComponent(message);
 
         // ⭐ Your WhatsApp Number (Change this)
-        const phoneNumber = "8011127009";
+        const phoneNumber = "+918011127009";
 
         const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
