@@ -28,6 +28,7 @@ export default function Form() {
         }
     }, [dateFrom, dateTo]);
 
+    // Convert vehicle array to react-select format
     const vehicleOptions = commercialVehicles.map((vehicle) => ({
         value: vehicle.name,
         label: (
@@ -50,7 +51,7 @@ export default function Form() {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        // ⭐ JS VALIDATIONS
+        // JS Validations
         if (dateFrom < today) {
             alert("❌ From Date cannot be earlier than today.");
             return;
@@ -65,36 +66,59 @@ export default function Form() {
 
         const data = {
             category: formData.get("category"),
-            vehicle_type: vehicle?.value || null,
+            vehicle_type: vehicle?.value || "N/A",
             name: formData.get("name"),
             phone: formData.get("phone"),
-            address: formData.get("address"),
-            destination: formData.get("destination"),
-            date_from: formData.get("date_from"),
-            date_to: formData.get("date_to"),
-            no_of_days: days === "" ? null : days, // use auto-calculated integer
+            address: formData.get("address") || "N/A",
+            destination: formData.get("destination") || "N/A",
+            date_from: formData.get("date_from") || "N/A",
+            date_to: formData.get("date_to") || "N/A",
+            no_of_days: days || "N/A",
         };
 
-        console.log("Sending to Supabase:", data);
+        // ⭐ WhatsApp Message Formatting
+        const message = `
+*New Enquiry Received* 📩
 
-        const { error } = await supabase.from("bookings").insert([data]);
+*Category:* ${data.category}
+*Vehicle:* ${data.vehicle_type}
 
-        if (error) {
-            alert("❌ Error: " + error.message);
-        } else {
-            alert("✅ Booking saved!");
-            e.target.reset();
-            setCategory("");
-            setVehicle(null);
-            setDateFrom("");
-            setDateTo("");
-            setDays("");
-        }
+*Name:* ${data.name}
+*Phone:* ${data.phone}
+*Address:* ${data.address}
+*Destination:* ${data.destination}
+
+*From:* ${data.date_from}
+*To:* ${data.date_to}
+*Total Days:* ${data.no_of_days}
+
+Thank you 🙏
+    `;
+
+        const encodedMessage = encodeURIComponent(message);
+
+        // ⭐ Your WhatsApp Number (Change this)
+        const phoneNumber = "7002812274";
+
+        const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+        // Redirect user to WhatsApp
+        window.open(whatsappURL, "_blank");
+
+        // Reset form
+        e.target.reset();
+        setCategory("");
+        setVehicle(null);
+        setDateFrom("");
+        setDateTo("");
+        setDays("");
     }
+
 
     return (
         <div className="card w-full max-w-md bg-base-100/90 backdrop-blur-md shadow-lg rounded-xl border border-base-300">
             <div className="card-body p-6">
+
                 <p className="mb-4 p-3 tracking-wider text-primary font-bold text-xl bg-primary/10 rounded-md">
                     ☎ +91 80111 27009
                 </p>
@@ -103,6 +127,7 @@ export default function Form() {
 
                 <form onSubmit={handleSubmit} className="space-y-3">
 
+                    {/* ⭐ UPDATED CATEGORY DROPDOWN */}
                     <select
                         name="category"
                         required
@@ -111,13 +136,14 @@ export default function Form() {
                         onChange={handleCategory}
                     >
                         <option value="">— Select Category —</option>
-                        <option value="Commercial Vehicles">Commercial Vehicles</option>
                         <option value="Bike">Bike</option>
+                        <option value="Car Rentals">Car Rentals</option>
                         <option value="House Office Shifting">House Office Shifting</option>
                         <option value="Tour Planner">Tour Planner</option>
                     </select>
 
-                    {category === 'Commercial Vehicles' && (
+                    {/* ⭐ SHOW VEHICLE LIST WHEN "Car Rentals" SELECTED */}
+                    {category === "Car Rentals" && (
                         <div className="mt-4">
                             <label className="block font-medium mb-2">Select Vehicle Type</label>
                             <Select
@@ -151,6 +177,7 @@ export default function Form() {
                         className="input input-bordered w-full"
                     />
 
+                    {/* Hide destination only for House Shifting */}
                     {category !== "House Office Shifting" && (
                         <input
                             type="text"
@@ -164,7 +191,7 @@ export default function Form() {
                         <input
                             type="date"
                             name="date_from"
-                            min={today}                       // ⭐ cannot pick past date
+                            min={today}
                             className="input input-bordered w-full"
                             onChange={(e) => setDateFrom(e.target.value)}
                         />
@@ -173,7 +200,7 @@ export default function Form() {
                             <input
                                 type="date"
                                 name="date_to"
-                                min={dateFrom}                  // ⭐ cannot pick earlier than from date
+                                min={dateFrom}
                                 className="input input-bordered w-full"
                                 onChange={(e) => setDateTo(e.target.value)}
                             />
@@ -194,7 +221,6 @@ export default function Form() {
                     <button type="submit" className="btn btn-primary w-full mt-2">
                         Submit
                     </button>
-
                 </form>
             </div>
         </div>

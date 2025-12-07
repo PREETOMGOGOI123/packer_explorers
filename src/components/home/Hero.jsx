@@ -12,10 +12,7 @@ export default  function Hero() {
             {/* Overlay */}
             <div className="absolute inset-0 bg-neutral/70"></div>
 
-            <div className="hero-content flex-col lg:flex-row-reverse justify-between items-center w-full max-w-6xl px-6 gap-12 relative z-20">
-
-
-                <Form />
+            <div className="hero-content flex-col lg:flex-row justify-between items-center w-full max-w-6xl px-6 gap-12 relative z-20">
 
                 {/* Text Content */}
                 <div className="text-center lg:text-left max-w-xl p-5 rounded-md text-neutral-content/70">
@@ -48,6 +45,7 @@ export default  function Hero() {
                         </div>
                     </div>
                 </div>
+                <Form />
 
             </div>
         </section>
