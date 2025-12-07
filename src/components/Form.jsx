@@ -78,19 +78,21 @@ export default function Form() {
 
         // ⭐ WhatsApp Message Formatting
         const message = `
-Hello this is ${data.name}! and I want to make an enquiry for the following:
+*New Enquiry* 📩
 
-Category: ${data.category}
-Vehicle: ${data.vehicle_type}
+*Category:* ${data.category}
+*Vehicle:* ${data.vehicle_type}
 
-Name: ${data.name}
-Phone: ${data.phone}
-Address: ${data.address}
-Destination: ${data.destination}
+*Name:* ${data.name}
+*Phone:* ${data.phone}
+*Address:* ${data.address}
+*Destination:* ${data.destination}
 
-From: ${data.date_from}
-To: ${data.date_to}
-Total Days: ${data.no_of_days}
+*From:* ${data.date_from}
+*To:* ${data.date_to}
+*Total Days:* ${data.no_of_days}
+
+Thank you 🙏
     `;
 
         const encodedMessage = encodeURIComponent(message);
